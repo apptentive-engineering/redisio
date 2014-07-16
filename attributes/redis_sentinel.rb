@@ -22,7 +22,6 @@ default['redisio']['sentinel_defaults'] = {
   'sentinel_port'           => 26379,
   'monitor'                 => nil,
   'down-after-milliseconds' => 30000,
-  'can-failover'            => 'yes',
   'parallel-syncs'          => 1,
   'failover-timeout'        => 900000
 }

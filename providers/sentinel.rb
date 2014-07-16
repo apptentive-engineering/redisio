@@ -97,7 +97,6 @@ def configure
           :masterport             => current['master_port'],
           :authpass               => current['auth-pass'],
           :downaftermil           => current['down-after-milliseconds'],
-          :canfailover            => current['can-failover'],
           :parallelsyncs          => current['parallel-syncs'],
           :failovertimeout        => current['failover-timeout']
         })
