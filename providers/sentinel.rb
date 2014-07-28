@@ -34,6 +34,8 @@ def configure
     #Merge the configuration defaults with the provided array of configurations provided
     current = current_defaults_hash.merge(current_instance_hash)
 
+    descriptors = current['ulimit'] == 0 ? current['maxclients'] + 32 : current['maxclients']
+
     recipe_eval do
       sentinel_name = current['name'] || current['port']
       sentinel_name = "sentinel_#{sentinel_name}"
@@ -81,6 +83,12 @@ def configure
         action :touch
         only_if { current['logfile'] && current['logfile'] != 'stdout' }
       end
+      #Setup the redis users descriptor limits
+      if current['ulimit']
+        user_ulimit current['user'] do
+          filehandle_limit descriptors
+        end
+      end
       #Lay down the configuration files for the current instance
       template "#{current['configdir']}/#{sentinel_name}.conf" do
         source 'sentinel.conf.erb'
@@ -98,6 +106,7 @@ def configure
           :authpass               => current['auth-pass'],
           :downaftermil           => current['down-after-milliseconds'],
           :parallelsyncs          => current['parallel-syncs'],
+          :maxclients             => current['maxclients'],
           :failovertimeout        => current['failover-timeout']
         })
       end
@@ -116,6 +125,7 @@ def configure
           :uob_control => node['redisio']['job_control'],
           :user => current['user'],
           :configdir => current['configdir'],
+          :ulimit => descriptors,
           :piddir => piddir,
           :platform => node['platform'],
           })

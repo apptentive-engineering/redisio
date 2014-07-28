@@ -23,6 +23,7 @@ default['redisio']['sentinel_defaults'] = {
   'monitor'                 => nil,
   'down-after-milliseconds' => 30000,
   'parallel-syncs'          => 1,
+  'maxclients'              => 10000,
   'failover-timeout'        => 900000
 }
 
